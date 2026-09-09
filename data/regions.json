@@ -1,0 +1,88 @@
+[
+  {
+    "name": "Africa",
+    "members": [
+      "NGA",
+      "EGY",
+      "ZAF",
+      "KEN",
+      "ETH",
+      "DZA",
+      "MAR",
+      "GHA"
+    ],
+    "countryCount": 8
+  },
+  {
+    "name": "Asia",
+    "members": [
+      "AFG",
+      "IND",
+      "CHN",
+      "JPN",
+      "KOR",
+      "IDN",
+      "PAK",
+      "BGD",
+      "TUR",
+      "IRN",
+      "IRQ",
+      "SAU",
+      "ISR",
+      "THA",
+      "VNM",
+      "PHL",
+      "MYS"
+    ],
+    "countryCount": 17
+  },
+  {
+    "name": "Europe",
+    "members": [
+      "DEU",
+      "GBR",
+      "FRA",
+      "ITA",
+      "ESP",
+      "RUS",
+      "POL",
+      "NLD",
+      "BEL",
+      "SWE",
+      "CHE",
+      "UKR",
+      "PRT",
+      "GRC",
+      "AUT"
+    ],
+    "countryCount": 15
+  },
+  {
+    "name": "North America",
+    "members": [
+      "USA",
+      "CAN",
+      "MEX"
+    ],
+    "countryCount": 3
+  },
+  {
+    "name": "South America",
+    "members": [
+      "BRA",
+      "ARG",
+      "COL",
+      "PER",
+      "CHL"
+    ],
+    "countryCount": 5
+  },
+  {
+    "name": "Oceania",
+    "members": [
+      "AUS",
+      "NZL"
+    ],
+    "countryCount": 2
+  }
+]

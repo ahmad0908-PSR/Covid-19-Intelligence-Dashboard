@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Global COVID-19 Intelligence Dashboard</title>
+<meta name="description" content="An interactive browser-based public-health intelligence dashboard exploring historical global COVID-19 data through GIS mapping, time-series analytics, and country comparisons." />
+<link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/vendor/maplibre-gl.css" />
+<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/layout.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="css/dashboard.css" />
+<link rel="stylesheet" href="css/map.css" />
+<link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body data-theme="dark">
+
+<!-- ============================== Loading screen ============================== -->
+<div id="loading-screen">
+  <div class="loading-brand">
+    <div class="brand-mark">C19</div>
+    <h2 id="loading-title">COVID-19 INTELLIGENCE</h2>
+    <p>Loading global data&hellip;</p>
+  </div>
+  <div class="loading-steps" id="loading-steps">
+    <div class="loading-step" data-step="config"><span>Configuration</span><span class="step-check"></span></div>
+    <div class="loading-step" data-step="countries"><span>Countries</span><span class="step-check"></span></div>
+    <div class="loading-step" data-step="covid"><span>COVID-19 statistics</span><span class="step-check"></span></div>
+    <div class="loading-step" data-step="vaccination"><span>Vaccination data</span><span class="step-check"></span></div>
+    <div class="loading-step" data-step="geo"><span>Geographic data</span><span class="step-check"></span></div>
+  </div>
+  <div class="loading-bar-track"><div class="loading-bar-fill" id="loading-bar-fill"></div></div>
+</div>
+
+<div class="toast-container" id="toast-container"></div>
+<div id="modal-root"></div>
+
+<div class="app-shell" id="app-shell">
+
+  <!-- ============================== Sidebar ============================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">C19</div>
+      <div class="brand-text">
+        <div class="brand-name" data-bind="shortName">COVID-19 Intelligence</div>
+        <div class="brand-sub">GIS &amp; Analytics</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav" aria-label="Dashboard sections">
+      <button class="nav-item active" data-view="overview"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span>Overview</span></button>
+      <button class="nav-item" data-view="global-map"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 4 6 4 9s-1.5 6.4-4 9c-2.5-2.6-4-6-4-9s1.5-6.4 4-9Z"/></svg><span>Global Map</span></button>
+      <button class="nav-item" data-view="countries"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.3"/></svg><span>Countries</span></button>
+      <button class="nav-item" data-view="trends"><svg viewBox="0 0 24 24"><path d="M4 19V10m6 9V4m6 15v-7m6 7V8"/></svg><span>Trends</span></button>
+      <button class="nav-item" data-view="comparisons"><svg viewBox="0 0 24 24"><path d="M8 3v18M16 3v18M4 8h4M4 14h4M16 8h4M16 14h4"/></svg><span>Comparisons</span></button>
+      <button class="nav-item" data-view="vaccination"><svg viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg><span>Vaccination</span></button>
+      <button class="nav-item" data-view="rankings"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M6 3h12l-1 8a5 5 0 0 1-10 0L6 3Z"/><path d="M6 5H3v2a3 3 0 0 0 3 3M18 5h3v2a3 3 0 0 1-3 3"/></svg><span>Rankings</span></button>
+      <button class="nav-item" data-view="data-explorer"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 10v10"/></svg><span>Data Explorer</span></button>
+      <button class="nav-item" data-view="data-quality"><svg viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.4 9 8 10 4.6-1 8-5 8-10V6l-8-4Z"/><path d="m9.5 12 2 2 3.5-4.5"/></svg><span>Data Quality</span></button>
+      <button class="nav-item" data-view="about"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>About</span></button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="pill-group" style="width:100%; justify-content:space-between;" id="theme-switch" role="radiogroup" aria-label="Theme">
+        <button class="pill" data-theme-option="light">Light</button>
+        <button class="pill active" data-theme-option="dark">Dark</button>
+        <button class="pill" data-theme-option="system">System</button>
+      </div>
+      <a class="portfolio-back-link" id="portfolio-back-link" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6"/><path d="M13 3v2h4.6l-9 9 1.4 1.4 9-9V11h2V3h-8Z"/></svg>
+        <span>Back to Portfolio</span>
+      </a>
+    </div>
+  </aside>
+
+  <div class="sidebar-scrim" id="sidebar-scrim" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:35;"></div>
+
+  <!-- ============================== Main column ============================== -->
+  <div class="app-main">
+    <header class="topbar">
+      <button class="icon-btn mobile-nav-toggle" id="mobile-nav-toggle" aria-label="Open navigation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+      <div>
+        <h1 id="view-title">Overview</h1>
+        <div class="view-subtitle" id="view-subtitle">Global situation summary</div>
+      </div>
+      <div class="topbar-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" id="global-search-input" placeholder="Search country..." autocomplete="off" aria-label="Search country" />
+        <div class="topbar-search-results" id="global-search-results"></div>
+      </div>
+      <button class="icon-btn" id="fullscreen-toggle" aria-label="Toggle fullscreen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+      </button>
+    </header>
+
+    <main class="view-container" id="view-container" tabindex="-1">
+
+      <!-- ===== OVERVIEW ===== -->
+      <section class="view-panel active" id="view-overview" data-view-panel="overview">
+        <div class="dash-grid overview-grid">
+          <div class="overview-kpis" id="overview-kpis">
+            <div class="kpi-card kpi-hero">
+              <div class="kpi-label">Global Cases (Selected Date)</div>
+              <div class="kpi-value tabular" id="kpi-global-cases">&mdash;</div>
+              <div class="kpi-meta"><span class="kpi-change" id="kpi-global-cases-change"></span><span class="text-faint" id="kpi-global-cases-date"></span></div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Global Deaths</div>
+              <div class="kpi-value tabular" id="kpi-global-deaths">&mdash;</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">New Cases (Day)</div>
+              <div class="kpi-value tabular" id="kpi-new-cases">&mdash;</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label">Vaccination Coverage</div>
+              <div class="kpi-value tabular" id="kpi-vax-coverage">&mdash;</div>
+            </div>
+            <div class="panel" style="flex:1; min-height:0;">
+              <div class="panel-header"><h3 id="overview-list-title">Top Countries — Selected Date</h3></div>
+              <div class="panel-body no-pad" style="overflow-y:auto;">
+                <div style="padding:0 14px;" id="overview-recent-list"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="overview-map panel">
+            <div class="panel-header">
+              <h3 id="overview-map-title">Global Situation Map</h3>
+              <div class="panel-actions text-faint" id="overview-map-date"></div>
+            </div>
+            <div class="panel-body no-pad" style="position:relative;">
+              <div class="map-panel" id="overview-map-panel">
+                <div id="map-container-overview" class="map-fill"></div>
+                <div class="map-loading-overlay" id="overview-map-loading">Loading map&hellip;</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="overview-charts">
+            <div class="panel chart-panel">
+              <div class="panel-header"><h3>Global Daily New Cases</h3></div>
+              <div class="panel-body"><canvas id="chart-daily-new-cases"></canvas></div>
+            </div>
+            <div class="panel chart-panel">
+              <div class="panel-header"><h3>Regional Comparison</h3></div>
+              <div class="panel-body"><canvas id="chart-regional-comparison"></canvas></div>
+            </div>
+            <div class="panel chart-panel">
+              <div class="panel-header"><h3>Vaccination Progress</h3></div>
+              <div class="panel-body"><canvas id="chart-vaccination-progress"></canvas></div>
+            </div>
+          </div>
+        </div>
+        <div class="disclaimer-strip" id="disclaimer-strip-overview"></div>
+      </section>
+
+      <!-- ===== GLOBAL MAP ===== -->
+      <section class="view-panel" id="view-global-map" data-view-panel="global-map">
+        <div class="panel" style="height:100%;">
+          <div class="panel-body no-pad" style="position:relative; height:100%;">
+            <div class="map-panel" id="global-map-panel">
+              <div id="map-container-global" class="map-fill"></div>
+              <div class="map-loading-overlay" id="global-map-loading">Loading map&hellip;</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== COUNTRIES ===== -->
+      <section class="view-panel" id="view-countries" data-view-panel="countries">
+        <div class="page-toolbar">
+          <select class="control" id="country-profile-select"></select>
+          <div class="spacer"></div>
+        </div>
+        <div class="country-profile-layout" id="country-profile-layout">
+          <div class="stack">
+            <div class="panel">
+              <div class="panel-body" id="country-profile-summary">
+                <div class="state-block"><p>Select a country to view its profile.</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="country-charts-grid">
+              <div class="panel chart-panel"><div class="panel-header"><h3>Cases Over Time</h3></div><div class="panel-body"><canvas id="chart-country-cases"></canvas></div></div>
+              <div class="panel chart-panel"><div class="panel-header"><h3>Deaths Over Time</h3></div><div class="panel-body"><canvas id="chart-country-deaths"></canvas></div></div>
+              <div class="panel chart-panel"><div class="panel-header"><h3>New Cases (7-day avg)</h3></div><div class="panel-body"><canvas id="chart-country-new-cases"></canvas></div></div>
+              <div class="panel chart-panel"><div class="panel-header"><h3>Vaccination Coverage</h3></div><div class="panel-body"><canvas id="chart-country-vaccination"></canvas></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TRENDS ===== -->
+      <section class="view-panel" id="view-trends" data-view-panel="trends">
+        <div class="page-toolbar">
+          <select class="control" id="trends-country-select"></select>
+          <select class="control" id="trends-metric-select">
+            <option value="new_cases">New Cases</option>
+            <option value="total_cases">Total Cases</option>
+            <option value="new_deaths">New Deaths</option>
+            <option value="total_deaths">Total Deaths</option>
+            <option value="cases_per_million">Cases / Million</option>
+            <option value="deaths_per_million">Deaths / Million</option>
+          </select>
+          <input type="date" class="control" id="trends-date-from" />
+          <input type="date" class="control" id="trends-date-to" />
+          <div class="pill-group" id="trends-aggregation">
+            <button class="pill active" data-agg="daily">Daily</button>
+            <button class="pill" data-agg="weekly">Weekly</button>
+            <button class="pill" data-agg="monthly">Monthly</button>
+          </div>
+          <button class="btn btn-sm" id="trends-reset-zoom">Reset Zoom</button>
+        </div>
+        <div class="panel chart-panel" style="height:calc(100% - 50px);">
+          <div class="panel-body"><div class="echart-el" id="chart-trends-explorer" style="height:100%;"></div></div>
+        </div>
+      </section>
+
+      <!-- ===== COMPARISONS ===== -->
+      <section class="view-panel" id="view-comparisons" data-view-panel="comparisons">
+        <div class="panel" style="margin-bottom:14px;">
+          <div class="panel-body">
+            <div class="compare-selector">
+              <select class="control" id="compare-add-select"><option value="">+ Add country to compare&hellip;</option></select>
+              <div id="compare-chips" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2" style="margin-bottom:14px;">
+          <div class="panel chart-panel"><div class="panel-header"><h3>Metric Comparison</h3></div><div class="panel-body"><canvas id="chart-compare-bar"></canvas></div></div>
+          <div class="panel chart-panel"><div class="panel-header"><h3>Trend Comparison</h3></div><div class="panel-body"><canvas id="chart-compare-line"></canvas></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h3>Comparison Table</h3></div>
+          <div class="panel-body no-pad data-table-wrap"><table class="data-table" id="compare-table"></table></div>
+        </div>
+      </section>
+
+      <!-- ===== VACCINATION ===== -->
+      <section class="view-panel" id="view-vaccination" data-view-panel="vaccination">
+        <div class="grid-2" style="margin-bottom:14px;">
+          <div class="panel chart-panel"><div class="panel-header"><h3>Global Vaccination Progress</h3></div><div class="panel-body"><canvas id="chart-vax-global"></canvas></div></div>
+          <div class="panel chart-panel"><div class="panel-header"><h3>Vaccination by Region</h3></div><div class="panel-body"><canvas id="chart-vax-region"></canvas></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h3>Vaccination Coverage by Country</h3></div>
+          <div class="panel-body no-pad data-table-wrap"><table class="data-table" id="vax-table"></table></div>
+        </div>
+      </section>
+
+      <!-- ===== RANKINGS ===== -->
+      <section class="view-panel" id="view-rankings" data-view-panel="rankings">
+        <div class="rankings-layout">
+          <div class="page-toolbar">
+            <select class="control" id="ranking-metric-select">
+              <option value="total_cases">Highest Cases</option>
+              <option value="total_deaths">Highest Deaths</option>
+              <option value="cases_per_million">Highest Cases / Million</option>
+              <option value="deaths_per_million">Highest Deaths / Million</option>
+              <option value="vaccination_pct">Highest Vaccination</option>
+              <option value="recent_increase">Largest Recent Increase</option>
+              <option value="recent_decrease">Largest Recent Decrease</option>
+            </select>
+            <select class="control" id="ranking-region-filter"><option value="all">All Regions</option></select>
+            <div class="topbar-search" style="margin-left:0; width:220px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input type="search" class="control" id="ranking-search" placeholder="Search country..." style="padding-left:30px; background:none; border:none;" />
+            </div>
+            <div class="spacer"></div>
+            <span class="text-faint" id="ranking-results-count"></span>
+          </div>
+          <div class="panel" style="flex:1; min-height:0;">
+            <div class="panel-body no-pad data-table-wrap"><table class="data-table" id="rankings-table"></table></div>
+          </div>
+          <div class="page-toolbar" id="rankings-pagination" style="justify-content:center;"></div>
+        </div>
+      </section>
+
+      <!-- ===== DATA EXPLORER ===== -->
+      <section class="view-panel" id="view-data-explorer" data-view-panel="data-explorer">
+        <div class="page-toolbar">
+          <div class="topbar-search" style="margin-left:0; width:220px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="search" class="control" id="explorer-search" placeholder="Search..." style="padding-left:30px; background:none; border:none;" />
+          </div>
+          <select class="control" id="explorer-region-filter"><option value="all">All Regions</option></select>
+          <select class="control" id="explorer-country-filter"><option value="all">All Countries</option></select>
+          <div class="spacer"></div>
+          <div class="column-toggle-menu">
+            <button class="btn btn-sm" id="explorer-columns-btn">Columns</button>
+            <div class="column-toggle-list" id="explorer-columns-list"></div>
+          </div>
+          <button class="btn btn-sm" id="explorer-reset-btn">Reset Filters</button>
+          <button class="btn btn-sm btn-primary" id="explorer-export-btn">Export CSV</button>
+        </div>
+        <div class="panel" style="height:calc(100% - 50px);">
+          <div class="panel-body no-pad data-table-wrap"><table class="data-table" id="explorer-table"></table></div>
+          <div class="page-toolbar" id="explorer-pagination" style="justify-content:center; padding:10px;"></div>
+        </div>
+      </section>
+
+      <!-- ===== DATA QUALITY ===== -->
+      <section class="view-panel" id="view-data-quality" data-view-panel="data-quality">
+        <div class="quality-summary-grid" id="quality-summary-grid"></div>
+        <div class="grid-2">
+          <div class="panel"><div class="panel-header"><h3>Validity Issues</h3></div><div class="panel-body" id="quality-validity-list"></div></div>
+          <div class="panel"><div class="panel-header"><h3>Consistency Issues</h3></div><div class="panel-body" id="quality-consistency-list"></div></div>
+        </div>
+      </section>
+
+      <!-- ===== ABOUT ===== -->
+      <section class="view-panel" id="view-about" data-view-panel="about">
+        <div class="about-content">
+          <div class="panel"><div class="panel-body">
+            <h3 style="margin-top:0;" id="about-app-name">Global COVID-19 Intelligence Dashboard</h3>
+            <p id="about-description">An interactive browser-based public-health data visualization platform combining historical COVID-19 statistics, temporal analytics, population-normalized indicators, country comparisons, and geospatial visualization.</p>
+            <h3>Data Disclaimer</h3>
+            <p id="about-disclaimer"></p>
+            <h3>Demonstration Dataset Notice</h3>
+            <p id="about-demo-notice"></p>
+            <h3>Data Sources</h3>
+            <div id="about-sources-list"></div>
+            <h3>Technology</h3>
+            <p>Built with vanilla HTML5, CSS3, and ES6+ JavaScript. Mapping via MapLibre GL JS and deck.gl. Analytical charts via Apache ECharts and Chart.js. No frameworks, no backend, no database &mdash; 100% static and deployable to GitHub Pages.</p>
+          </div></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- Vendored libraries (local, no CDN dependency) -->
+<script src="assets/vendor/maplibre-gl.js"></script>
+<script src="assets/vendor/echarts.min.js"></script>
+<script src="assets/vendor/chart.umd.js"></script>
+<script src="assets/vendor/d3.min.js"></script>
+<script src="assets/vendor/deck.gl.min.js"></script>
+
+<!-- Application modules (load order matters: no bundler, plain scripts) -->
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/state.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/data-loader.js"></script>
+<script src="js/data-validator.js"></script>
+<script src="js/data-transformer.js"></script>
+<script src="js/calculations.js"></script>
+<script src="js/filters.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/map.js"></script>
+<script src="js/map-layers.js"></script>
+<script src="js/country-panel.js"></script>
+<script src="js/rankings.js"></script>
+<script src="js/data-table.js"></script>
+<script src="js/insights.js"></script>
+<script src="js/export.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

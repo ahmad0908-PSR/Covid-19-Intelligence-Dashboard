@@ -1,0 +1,44 @@
+/* ==========================================================================
+   Page-specific layouts: countries, trends, comparisons, vaccination,
+   rankings, data explorer, data quality, about
+   ========================================================================== */
+.page-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.page-toolbar .spacer { flex: 1; }
+.chart-panel { min-height: 260px; }
+.chart-panel canvas, .chart-panel .echart-el { width: 100%; height: 100%; min-height: 220px; }
+
+/* Country profile */
+.country-profile-layout { display: grid; grid-template-columns: 280px 1fr; gap: 14px; height: 100%; }
+.country-header { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+.country-header .flag-badge { width: 40px; height: 40px; border-radius: 8px; background: var(--color-panel-alt); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+.country-header h2 { font-size: 18px; }
+.country-stat-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--color-border); font-size: 12px; }
+.country-stat-row:last-child { border-bottom: none; }
+.country-charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* Comparisons */
+.compare-selector { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.compare-chip { display: flex; align-items: center; gap: 6px; background: var(--color-panel-alt); border: 1px solid var(--color-border); border-radius: 100px; padding: 5px 10px 5px 12px; font-size: 12px; font-weight: 600; }
+.compare-chip button { background: none; border: none; color: var(--color-ink-faint); font-size: 14px; line-height: 1; padding: 0; }
+.compare-chip button:hover { color: var(--color-accent); }
+
+/* Rankings */
+.rankings-layout { display: flex; flex-direction: column; gap: 14px; height: 100%; }
+
+/* Data quality */
+.quality-summary-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 14px; }
+.quality-score-card { text-align: center; padding: 20px; }
+.quality-issue-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--color-border); font-size: 12px; }
+
+/* About */
+.about-content { max-width: 760px; }
+.about-content h3 { font-size: 14px; margin: 18px 0 8px; }
+.about-content p { font-size: 12.5px; color: var(--color-ink-soft); margin-bottom: 8px; line-height: 1.6; }
+.source-card { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--color-border); font-size: 12px; }
+.source-card:last-child { border-bottom: none; }
+
+/* Data explorer toolbar */
+.column-toggle-menu { position: relative; }
+.column-toggle-list { position: absolute; top: 34px; right: 0; background: var(--color-panel); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 8px; box-shadow: var(--shadow-panel); z-index: 50; display: none; min-width: 160px; }
+.column-toggle-list.open { display: block; }
+.column-toggle-list label { display: flex; align-items: center; gap: 8px; padding: 5px 4px; font-size: 12px; }

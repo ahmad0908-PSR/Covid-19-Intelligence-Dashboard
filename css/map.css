@@ -1,0 +1,49 @@
+/* ==========================================================================
+   Map: container, controls, legend, timeline, tooltip
+   ========================================================================== */
+.map-panel { position: relative; height: 100%; min-height: 260px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--color-border); box-shadow: var(--shadow-panel); }
+.map-fill { position: absolute; inset: 0; background: #0B1116; }
+#map-canvas { position: absolute; inset: 0; }
+
+.map-toolbar { position: absolute; top: 10px; left: 10px; z-index: 10; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; max-width: calc(100% - 130px); }
+.map-toolbar select.control, .map-toolbar .pill-group { background: rgba(27,31,37,0.92); backdrop-filter: blur(4px); }
+[data-theme="light"] .map-toolbar select.control, [data-theme="light"] .map-toolbar .pill-group { background: rgba(255,255,255,0.92); }
+
+.map-nav-controls { position: absolute; top: 10px; right: 10px; z-index: 10; display: flex; flex-direction: column; gap: 6px; }
+.map-nav-controls .icon-btn { background: rgba(27,31,37,0.92); backdrop-filter: blur(4px); }
+[data-theme="light"] .map-nav-controls .icon-btn { background: rgba(255,255,255,0.92); }
+
+.map-legend {
+  position: absolute; bottom: 44px; left: 10px; z-index: 10; background: rgba(27,31,37,0.92); backdrop-filter: blur(4px);
+  border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 10px 12px; min-width: 190px;
+}
+[data-theme="light"] .map-legend { background: rgba(255,255,255,0.92); }
+.map-legend-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: var(--color-ink-faint); margin-bottom: 6px; }
+.map-legend-bar { height: 8px; border-radius: 100px; background: linear-gradient(90deg, var(--scale-low), var(--scale-mid), var(--scale-high)); margin-bottom: 4px; }
+.map-legend-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--color-ink-faint); }
+.map-legend-nodata { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 10.5px; color: var(--color-ink-faint); }
+.map-legend-nodata i { width: 9px; height: 9px; border-radius: 2px; background: #3A404C; display: inline-block; }
+
+.map-timeline {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 10; background: rgba(20,23,28,0.95); backdrop-filter: blur(4px);
+  border-top: 1px solid var(--color-border); padding: 6px 12px; display: flex; align-items: center; gap: 10px;
+}
+[data-theme="light"] .map-timeline { background: rgba(255,255,255,0.95); }
+.map-timeline .icon-btn { width: 26px; height: 26px; }
+.map-timeline-date { font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; width: 90px; text-align: center; flex-shrink: 0; }
+.map-timeline-slider { flex: 1; }
+.map-timeline-slider input[type="range"] { width: 100%; accent-color: var(--color-accent); }
+.map-timeline-play { width: 26px; height: 26px; }
+
+.map-loading-overlay { position: absolute; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; background: rgba(11,17,22,0.6); color: var(--color-ink-soft); font-size: 12px; }
+
+.map-country-popup { background: var(--color-panel); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 12px; min-width: 180px; box-shadow: var(--shadow-panel); }
+.map-country-popup h4 { font-size: 13px; margin-bottom: 6px; }
+.map-country-popup .popup-row { display: flex; justify-content: space-between; padding: 2px 0; }
+.map-country-popup .popup-row span:first-child { color: var(--color-ink-faint); }
+.maplibregl-popup-content { background: var(--color-panel) !important; color: var(--color-ink) !important; border: 1px solid var(--color-border) !important; border-radius: var(--radius-sm) !important; box-shadow: var(--shadow-panel) !important; padding: 0 !important; }
+.maplibregl-popup-tip { border-top-color: var(--color-panel) !important; border-bottom-color: var(--color-panel) !important; }
+.maplibregl-ctrl-attrib { background: rgba(0,0,0,0.4) !important; border-radius: 4px 0 0 0 !important; }
+.maplibregl-ctrl-attrib a { color: #CBD0D8 !important; }
+
+.map-search-wrap { position: relative; width: 190px; }

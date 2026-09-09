@@ -1,0 +1,17 @@
+{
+  "appName": "Global COVID-19 Intelligence Dashboard",
+  "shortName": "COVID-19 Intelligence",
+  "version": "1.0.0",
+  "portfolioUrl": "https://ahmad0908-psr.github.io/ahmad0908-PSR/",
+  "defaultCountry": "Afghanistan",
+  "defaultCountryIso3": "AFG",
+  "defaultMetric": "total_cases",
+  "defaultDate": "2021-07-01",
+  "minDate": "2020-02-15",
+  "maxDate": "2022-06-30",
+  "defaultTheme": "dark",
+  "defaultProjection": "globe",
+  "isDemoDataset": true,
+  "demoDatasetNotice": "This dashboard currently ships with a representative demonstration dataset modeled on public aggregate reporting patterns (WHO / Our World in Data style). It is built so the demo files in /data can be swapped for a complete historical dataset without changing any application code.",
+  "disclaimer": "This dashboard is an educational and portfolio demonstration using aggregated historical COVID-19 data. Reported figures may differ between countries because of differences in testing, reporting practices, definitions, revisions, and data availability. This dashboard is not a medical, epidemiological, or public-health decision-making system."
+}

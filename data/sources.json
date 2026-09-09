@@ -1,0 +1,26 @@
+[
+  {
+    "name": "World Health Organization (WHO) COVID-19 Dashboard",
+    "dataset": "WHO Coronavirus (COVID-19) Dashboard",
+    "url": "https://covid19.who.int/",
+    "retrievalDate": "2026-01-15",
+    "license": "WHO Data Policy (attribution required)",
+    "notes": "Aggregate case and death figures reported by national health authorities to WHO."
+  },
+  {
+    "name": "Our World in Data (OWID)",
+    "dataset": "COVID-19 Dataset (cases, deaths, vaccinations)",
+    "url": "https://ourworldindata.org/coronavirus",
+    "retrievalDate": "2026-01-15",
+    "license": "Creative Commons BY 4.0",
+    "notes": "Compiled and harmonized COVID-19 statistics, including vaccination rollout data."
+  },
+  {
+    "name": "United Nations, Department of Economic and Social Affairs, Population Division",
+    "dataset": "World Population Prospects",
+    "url": "https://population.un.org/wpp/",
+    "retrievalDate": "2026-01-15",
+    "license": "UN Data Terms of Use",
+    "notes": "Used for population-normalized indicators (per-million, per-100k figures)."
+  }
+]
