@@ -2,7 +2,7 @@
   "appName": "Global COVID-19 Intelligence Dashboard",
   "shortName": "COVID-19 Intelligence",
   "version": "1.0.0",
-  "portfolioUrl": "https://ahmad0908-psr.github.io/ahmad0908-PSR/",
+  "portfolioUrl": "https://ahmad0908-psr.github.io",
   "defaultCountry": "Afghanistan",
   "defaultCountryIso3": "AFG",
   "defaultMetric": "total_cases",
